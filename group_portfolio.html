@@ -1,0 +1,1819 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>User Profile Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            padding: 15px 0;
+        }
+
+        .navbar-brand,
+        .nav-link {
+            color: #ecf0f1 !important;
+            transition: color 0.3s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #3498db !important;
+        }
+
+        .dropdown-menu {
+            background-color: #34495e;
+            border: none;
+        }
+
+        .dropdown-item {
+            color: #ecf0f1;
+        }
+
+        .dropdown-item:hover {
+            background-color: #3498db;
+            color: #fff;
+        }
+
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .container {
+            padding: 20px;
+            display: flex;
+            gap: 40px;
+        }
+
+        .form-section,
+        .user-section {
+            flex: 1;
+        }
+
+        input,
+        button,
+        select {
+            margin: 5px 0;
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 6px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .profile-viewer {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            max-width: 300px;
+            background: #f4f4f4;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 80vh;
+            z-index: 2000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-media-container {
+            width: 100%;
+            height: 300px;
+            background: #1f1f1f;
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            margin-top: 10px;
+        }
+
+        .profile-media-display {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .profile-media-display img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .profile-media-display video,
+        .profile-media-display audio {
+            max-width: 90%;
+            max-height: 80%;
+            cursor: pointer;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 50%;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1;
+            z-index: 2100;
+            touch-action: manipulation;
+        }
+
+        .close-btn:hover {
+            background: #cc0000;
+        }
+
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            color: white;
+            background-color: green;
+            border-radius: 5px;
+            width: 100%;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        .message.error {
+            background-color: red;
+        }
+
+        #clickableNames {
+            padding: 20px;
+        }
+
+        .name-item {
+            cursor: pointer;
+            color: blue;
+            margin-bottom: 10px;
+        }
+
+        .name-item:hover {
+            text-decoration: underline;
+        }
+
+        .roll-number {
+            font-weight: bold;
+            color: #333;
+            margin-right: 5px;
+        }
+
+        .viewer-container {
+            width: 350px;
+            height: 450px;
+            background: #1f1f1f;
+            border-radius: 10px;
+            margin-top: 40px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .media-display {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .media-display img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .navigation {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            top: 50%;
+            transform: translateY(-50%);
+            padding: 0 10px;
+        }
+
+        .nav-button {
+            background: blue;
+            border: none;
+            color: white;
+            font-size: 20px;
+            padding: 10px;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        .nav-button:hover {
+            background: #555;
+        }
+
+        .upload-section {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .enlarged-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1200;
+        }
+
+        .enlarged-viewer img {
+            max-width: 50%;
+            max-height: 60%;
+            border-radius: 20%;
+        }
+
+        .enlarged-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ff0000;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            z-index: 1300;
+            touch-action: manipulation;
+        }
+
+        .enlarged-close-btn:hover {
+            background: #cc0000;
+        }
+
+        .tooltip {
+            display: block;
+            font-size: 12px;
+            font-style: italic;
+            color: #333;
+            background-color: #e0e0e0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 2px 0 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .tooltip.valid {
+            color: white;
+            background-color: green;
+        }
+
+        .tooltip.invalid {
+            color: white;
+            background-color: red;
+        }
+
+        .auth-section,
+        .settings-section,
+        .admin-section {
+            padding: 20px;
+            max-width: 500px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-section h2,
+        .settings-section h3,
+        .admin-section h2,
+        .admin-section h3 {
+            color: #2c3e50;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .back-button {
+            background: #3498db;
+            border: none;
+            color: white;
+            font-size: 18px;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            display: inline-block;
+            touch-action: manipulation;
+        }
+
+        .back-button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#dashboard">Dashboard</a>
+            <div id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#dashboard" onclick="setActive(this); showMain()">Home</a>
+                    </li>
+                    <li class="nav-item dropdown" id="authDropdownItem">
+                        <a class="nav-link dropdown-toggle" href="#" id="authDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Register
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="authDropdown">
+                            <li><a class="dropdown-item" href="#auth" onclick="setActive(this); showAuth()">Sign Up</a>
+                            </li>
+                            <li><a class="dropdown-item" href="#auth" onclick="setActive(this); showAuth()">Login</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item" id="userLoginItem" style="display: none;">
+                        <a class="nav-link" href="#auth" onclick="setActive(this); showAuth()">Login</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="settingsDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Settings
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="settingsDropdown">
+                            <li><a class="dropdown-item" href="#settings" onclick="setActive(this); showSettings()">Edit Profile</a></li>
+                            <li><a class="dropdown-item" href="#settings" onclick="setActive(this); showSettings()">Upload Multimedia</a></li>
+                            <li><a class="dropdown-item" href="#settings" onclick="setActive(this); showSettings()">Change Email</a></li>
+                            <li><a class="dropdown-item" href="#settings" onclick="setActive(this); showSettings()">Change Password</a></li>
+                            <li><a class="dropdown-item" href="#settings" onclick="setActive(this); showSettings()">Update Phone</a></li>
+                            <li><a class="dropdown-item" href="#settings" onclick="setActive(this); showSettings()">Delete Account</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Admin Panel
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                            <li><a class="dropdown-item" href="#admin" onclick="setActive(this); showAdminSignup()">Admin Sign Up</a></li>
+                            <li><a class="dropdown-item" href="#admin" onclick="setActive(this); showAdminChangeEmail()">Change Admin Email</a></li>
+                            <li><a class="dropdown-item" href="#admin" onclick="setActive(this); showAdminChangePassword()">Change Admin Password</a></li>
+                            <li><a class="dropdown-item" href="#admin" onclick="setActive(this); showAdminDeleteAccount()">Delete Admin Account</a></li>
+                            <li><a class="dropdown-item" href="#admin" onclick="setActive(this); showAllTables()">Show All Tables</a></li>
+                            <li><a class="dropdown-item" href="#admin" onclick="setActive(this); showRemoveRow()">Remove Row</a></li>
+                            <li><a class="dropdown-item" href="#admin" onclick="setActive(this); showRemoveTable()">Remove Table</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about-us" onclick="showAboutUs()">About Us</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div id="authSection" class="auth-section hidden">
+        <button class="back-button" onclick="showMain()">← Back</button>
+        <h2>Sign Up</h2>
+        <input type="text" id="name" placeholder="Name" required oninput="validateField(this, 'name')" />
+        <span id="tooltip-name" class="tooltip">Letters and spaces only</span>
+        <input type="text" id="fname" placeholder="Father Name" required oninput="validateField(this, 'fname')" />
+        <span id="tooltip-fname" class="tooltip">Letters and spaces only</span>
+        <input type="text" id="gname" placeholder="Grandfather Name" required oninput="validateField(this, 'gname')" />
+        <span id="tooltip-gname" class="tooltip">Letters and spaces only</span>
+        <input type="text" id="department" placeholder="Department" required
+            oninput="validateField(this, 'department')" />
+        <span id="tooltip-department" class="tooltip">Letters and spaces only</span>
+        <input type="text" id="phone" placeholder="Phone (09xxxxxxxx)" required
+            oninput="validateField(this, 'phone')" />
+        <span id="tooltip-phone" class="tooltip">Must start with 09 and be 10 digits</span>
+        <input type="email" id="email" placeholder="Email" required oninput="validateField(this, 'email')" />
+        <span id="tooltip-email" class="tooltip">Valid email format (e.g., user@domain.com)</span>
+        <input type="password" id="password" placeholder="Password" required
+            oninput="validateField(this, 'password')" />
+        <span id="tooltip-password" class="tooltip">At least 6 characters</span>
+        <label><input type="checkbox" onclick="toggleVisibility('password')"> Show Password</label>
+        <button onclick="signup(event)">Sign Up</button>
+
+        <h2 class="mt-4">Login</h2>
+        <input type="email" id="loginEmail" placeholder="Email" required />
+        <input type="password" id="loginPassword" placeholder="Password" required />
+        <label><input type="checkbox" onclick="toggleVisibility('loginPassword')"> Show Password</label>
+        <button onclick="login(event)">Login</button>
+    </div>
+
+    <div id="adminLoginSection" class="auth-section hidden">
+        <button class="back-button" onclick="showMain()">← Back</button>
+        <h2>Admin Login</h2>
+        <input type="email" id="adminLoginEmail" placeholder="Admin Email" required />
+        <input type="password" id="adminLoginPassword" placeholder="Admin Password" required />
+        <label><input type="checkbox" onclick="toggleVisibility('adminLoginPassword')"> Show Password</label>
+        <button onclick="adminLogin(event)">Login</button>
+    </div>
+
+    <div id="mainSection" class="container">
+        <div class="form-section">
+            <div id="uploadSection" class="hidden">
+                <h3>Upload Media</h3>
+                <div class="viewer-container">
+                    <div class="media-display" id="mediaDisplay">
+                        <p>No media uploaded.</p>
+                    </div>
+                    <div class="navigation">
+                        <button class="nav-button" onclick="prevMedia()">‹</button>
+                        <button class="nav-button" onclick="nextMedia()">›</button>
+                    </div>
+                </div>
+                <div class="upload-section">
+                    <label for="fileType">Select File Type</label><br>
+                    <select id="fileType" onchange="updateFileAccept()">
+                        <option value="image">Image</option>
+                        <option value="audio">Audio</option>
+                        <option value="video">Video</option>
+                    </select><br>
+                    <label for="mediaUpload">Upload Media</label><br>
+                    <input type="file" id="mediaUpload" accept="image/*">
+                    <button onclick="uploadMedia(event)">Upload</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-section">
+            <h3 id="dashboard">Registered Users</h3>
+            <table id="userTable" class="hidden">
+                <tr>
+                    <th>Number</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Phone</th>
+                    <th>Password</th>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div id="clickableNames">
+        <h2>Names</h2>
+        <p>Click a name to view their profile (publicly accessible).</p>
+        <div id="nameList"></div>
+    </div>
+
+    <div id="settingsSection" class="settings-section hidden">
+        <button class="back-button" onclick="showMain()">← Back</button>
+        <h2>Settings</h2>
+        <h3>Edit Profile</h3>
+        <input type="text" id="editName" placeholder="Name" required oninput="validateField(this, 'editName')" />
+        <span id="tooltip-editName" class="tooltip">Letters and spaces only</span>
+        <input type="text" id="editFname" placeholder="Father Name" required
+            oninput="validateField(this, 'editFname')" />
+        <span id="tooltip-editFname" class="tooltip">Letters and spaces only</span>
+        <input type="text" id="editGname" placeholder="Grandfather Name" required
+            oninput="validateField(this, 'editGname')" />
+        <span id="tooltip-editGname" class="tooltip">Letters and spaces only</span>
+        <input type="text" id="editDepartment" placeholder="Department" required
+            oninput="validateField(this, 'editDepartment')" />
+        <span id="tooltip-editDepartment" class="tooltip">Letters and spaces only</span>
+        <input type="text" id="editPhone" placeholder="Phone (09xxxxxxxx)" required
+            oninput="validateField(this, 'editPhone')" />
+        <span id="tooltip-editPhone" class="tooltip">Must start with 09 and be 10 digits</span>
+        <button onclick="editProfile(event)">Save Profile Changes</button>
+
+        <h3>Upload Multimedia</h3>
+        <div class="viewer-container">
+            <div class="media-display" id="settingsMediaDisplay">
+                <p>No media uploaded.</p>
+            </div>
+            <div class="navigation">
+                <button class="nav-button" onclick="prevMedia()">‹</button>
+                <button class="nav-button" onclick="nextMedia()">›</button>
+            </div>
+        </div>
+        <div class="upload-section">
+            <label for="settingsFileType">Select File Type</label><br>
+            <select id="settingsFileType" onchange="updateSettingsFileAccept()">
+                <option value="image">Image</option>
+                <option value="audio">Audio</option>
+                <option value="video">Video</option>
+            </select><br>
+            <label for="settingsMediaUpload">Upload Media</label><br>
+            <input type="file" id="settingsMediaUpload" accept="image/*">
+            <button onclick="uploadSettingsMedia(event)">Upload</button>
+        </div>
+
+        <h3>Change Email</h3>
+        <input type="email" id="newEmail" placeholder="New Email" required oninput="validateField(this, 'newEmail')" />
+        <span id="tooltip-newEmail" class="tooltip">Valid email format (e.g., user@domain.com)</span>
+        <input type="password" id="emailCurrentPassword" placeholder="Current Password" required />
+        <button onclick="changeEmail(event)">Change Email</button>
+
+        <h3>Change Password</h3>
+        <input type="password" id="newPassword" placeholder="New Password" required
+            oninput="validateField(this, 'newPassword')" />
+        <span id="tooltip-newPassword" class="tooltip">At least 6 characters</span>
+        <input type="password" id="passwordCurrentPassword" placeholder="Current Password" required />
+        <button onclick="changePassword(event)">Change Password</button>
+
+        <h3>Update Phone Number</h3>
+        <input type="text" id="newPhone" placeholder="New Phone (09xxxxxxxx)" required
+            oninput="validateField(this, 'newPhone')" />
+        <span id="tooltip-newPhone" class="tooltip">Must start with 09 and be 10 digits</span>
+        <input type="password" id="phoneCurrentPassword" placeholder="Current Password" required />
+        <button onclick="updatePhone(event)">Update Phone</button>
+
+        <h3>Delete Account</h3>
+        <input type="password" id="deleteCurrentPassword" placeholder="Current Password" required />
+        <button onclick="deleteAccount(event)">Delete Account</button>
+    </div>
+
+    <div id="adminSection" class="admin-section hidden">
+        <button class="back-button" onclick="showMain()">← Back</button>
+        <div id="adminSignup" class="hidden">
+            <h2>Admin Sign Up</h2>
+            <input type="email" id="adminEmail" placeholder="Admin Email" required oninput="validateField(this, 'adminEmail')" />
+            <span id="tooltip-adminEmail" class="tooltip">Valid email format (e.g., admin@domain.com)</span>
+            <input type="password" id="adminPassword" placeholder="Admin Password" required oninput="validateField(this, 'adminPassword')" />
+            <span id="tooltip-adminPassword" class="tooltip">At least 6 characters</span>
+            <label><input type="checkbox" onclick="toggleVisibility('adminPassword')"> Show Password</label>
+            <button onclick="adminSignup(event)">Sign Up</button>
+        </div>
+        <div id="adminChangeEmail" class="hidden">
+            <h2>Change Admin Email</h2>
+            <input type="email" id="adminNewEmail" placeholder="New Admin Email" required oninput="validateField(this, 'adminNewEmail')" />
+            <span id="tooltip-adminNewEmail" class="tooltip">Valid email format (e.g., admin@domain.com)</span>
+            <input type="password" id="adminEmailCurrentPassword" placeholder="Current Admin Password" required />
+            <button onclick="adminChangeEmail(event)">Change Email</button>
+        </div>
+        <div id="adminChangePassword" class="hidden">
+            <h2>Change Admin Password</h2>
+            <input type="password" id="adminNewPassword" placeholder="New Admin Password" required oninput="validateField(this, 'adminNewPassword')" />
+            <span id="tooltip-adminNewPassword" class="tooltip">At least 6 characters</span>
+            <input type="password" id="adminPasswordCurrentPassword" placeholder="Current Admin Password" required />
+            <button onclick="adminChangePassword(event)">Change Password</button>
+        </div>
+        <div id="adminDeleteAccount" class="hidden">
+            <h2>Delete Admin Account</h2>
+            <input type="password" id="adminDeleteCurrentPassword" placeholder="Current Admin Password" required />
+            <button onclick="adminDeleteAccount(event)">Delete Account</button>
+        </div>
+        <div id="adminShowTables" class="hidden">
+            <h2>All Tables</h2>
+            <h3>Users Table</h3>
+            <table id="adminUserTable" class="hidden">
+                <tr>
+                    <th>Number</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Phone</th>
+                    <th>Password</th>
+                </tr>
+            </table>
+            <h3>Admins Table</h3>
+            <table id="adminAdminsTable" class="hidden">
+                <tr>
+                    <th>Admin ID</th>
+                    <th>Email</th>
+                    <th>Password</th>
+                </tr>
+            </table>
+        </div>
+        <div id="adminRemoveRow" class="hidden">
+            <h2>Remove Row</h2>
+            <select id="removeTableType">
+                <option value="users">Users Table</option>
+                <option value="admins">Admins Table</option>
+            </select>
+            <input type="text" id="removeRowId" placeholder="Enter Roll Number (Users) or Admin ID (Admins)" required />
+            <input type="password" id="removeRowPassword" placeholder="Admin Password" required />
+            <button onclick="removeRow(event)">Remove Row</button>
+        </div>
+        <div id="adminRemoveTable" class="hidden">
+            <h2>Remove Table</h2>
+            <select id="removeTableName">
+                <option value="users">Users Table</option>
+                <option value="admins">Admins Table</option>
+            </select>
+            <input type="password" id="removeTablePassword" placeholder="Admin Password" required />
+            <button onclick="removeTable(event)">Remove Table</button>
+        </div>
+    </div>
+
+    <div id="profileViewer" class="profile-viewer hidden">
+        <button class="close-btn" onclick="closeProfileViewer()">X</button>
+        <h4 id="profileFullName"></h4>
+        <p id="profileDepartment"></p>
+        <div id="mediaContainer" class="profile-media-container">
+            <div class="profile-media-display" id="profileMediaDisplay">
+                <p>No media available.</p>
+            </div>
+            <div class="navigation">
+                <button class="nav-button" onclick="prevProfileMedia()">‹</button>
+                <button class="nav-button" onclick="nextProfileMedia()">›</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentUser = null;
+        let currentAdmin = null;
+        let mediaFiles = [];
+        let currentIndex = 0;
+        let viewedMedia = [];
+        let viewedIndex = 0;
+        let tablesVisible = false;
+        const mediaDisplay = document.getElementById('mediaDisplay');
+        const mediaUpload = document.getElementById('mediaUpload');
+        const settingsMediaDisplay = document.getElementById('settingsMediaDisplay');
+        const settingsMediaUpload = document.getElementById('settingsMediaUpload');
+        const profileMediaDisplay = document.getElementById('profileMediaDisplay');
+
+        function initializeUsers() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            let maxRollNumber = 0;
+            users.forEach(user => {
+                if (user.rollNumber && !isNaN(user.rollNumber)) {
+                    maxRollNumber = Math.max(maxRollNumber, user.rollNumber);
+                }
+            });
+            users.forEach((user, index) => {
+                if (!user.rollNumber || isNaN(user.rollNumber) || user.rollNumber === undefined) {
+                    user.rollNumber = maxRollNumber + 1;
+                    maxRollNumber++;
+                }
+            });
+            localStorage.setItem('users', JSON.stringify(users));
+            return users;
+        }
+
+        function initializeAdmins() {
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            let maxAdminId = 0;
+            admins.forEach(admin => {
+                if (admin.adminId && !isNaN(admin.adminId)) {
+                    maxAdminId = Math.max(maxAdminId, admin.adminId);
+                }
+            });
+            admins.forEach((admin, index) => {
+                if (!admin.adminId || isNaN(admin.adminId) || admin.adminId === undefined) {
+                    admin.adminId = maxAdminId + 1;
+                    maxAdminId++;
+                }
+            });
+            localStorage.setItem('admins', JSON.stringify(admins));
+            return admins;
+        }
+
+        function toggleVisibility(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        }
+
+        function resetForms() {
+            const inputs = [
+                'name', 'fname', 'gname', 'department', 'phone', 'email', 'password', 'loginEmail', 'loginPassword',
+                'editName', 'editFname', 'editGname', 'editDepartment', 'editPhone', 'newEmail', 'newPassword',
+                'emailCurrentPassword', 'passwordCurrentPassword', 'newPhone', 'phoneCurrentPassword', 'deleteCurrentPassword',
+                'adminEmail', 'adminPassword', 'adminNewEmail', 'adminNewPassword', 'adminEmailCurrentPassword',
+                'adminPasswordCurrentPassword', 'adminDeleteCurrentPassword', 'removeRowId', 'removeRowPassword', 'removeTablePassword',
+                'adminLoginEmail', 'adminLoginPassword'
+            ];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) {
+                    input.value = '';
+                    const tooltip = document.getElementById(`tooltip-${id}`);
+                    if (tooltip) {
+                        tooltip.className = 'tooltip';
+                        tooltip.textContent = getTooltipMessage(id);
+                    }
+                }
+            });
+            const settingsMediaUpload = document.getElementById('settingsMediaUpload');
+            if (settingsMediaUpload) settingsMediaUpload.value = '';
+        }
+
+        function getTooltipMessage(field) {
+            switch (field) {
+                case 'name':
+                case 'fname':
+                case 'gname':
+                case 'department':
+                case 'editName':
+                case 'editFname':
+                case 'editGname':
+                case 'editDepartment':
+                    return 'Letters and spaces only';
+                case 'phone':
+                case 'editPhone':
+                case 'newPhone':
+                    return 'Must start with 09 and be 10 digits';
+                case 'email':
+                case 'newEmail':
+                case 'adminEmail':
+                case 'adminNewEmail':
+                case 'adminLoginEmail':
+                    return 'Valid email format (e.g., user@domain.com)';
+                case 'password':
+                case 'newPassword':
+                case 'adminPassword':
+                case 'adminNewPassword':
+                case 'adminLoginPassword':
+                    return 'At least 6 characters';
+                default:
+                    return '';
+            }
+        }
+
+        function validateInput(value, fieldName) {
+            const stringRegex = /^[a-zA-Z\s]+$/;
+            if (!stringRegex.test(value)) {
+                return `${fieldName} must contain only letters and spaces.`;
+            }
+            return '';
+        }
+
+        function validatePhone(phone) {
+            const phoneRegex = /^09\d{8}$/;
+            if (!phoneRegex.test(phone)) {
+                return 'Phone number must start with "09" and be exactly 10 digits.';
+            }
+            return '';
+        }
+
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return 'Please enter a valid email address.';
+            }
+            return '';
+        }
+
+        function validatePassword(password) {
+            if (password.length < 6) {
+                return 'Password must be at least 6 characters.';
+            }
+            return '';
+        }
+
+        function validateField(input, field) {
+            const value = input.value.trim();
+            const tooltip = document.getElementById(`tooltip-${field}`);
+            if (!tooltip) return;
+            let error = '';
+
+            if (field === 'name' || field === 'fname' || field === 'gname' || field === 'department' ||
+                field === 'editName' || field === 'editFname' || field === 'editGname' || field === 'editDepartment') {
+                error = validateInput(value, field.replace('edit', '').charAt(0).toUpperCase() + field.replace('edit', '').slice(1));
+            } else if (field === 'phone' || field === 'editPhone' || field === 'newPhone') {
+                error = validatePhone(value);
+            } else if (field === 'email' || field === 'newEmail' || field === 'adminEmail' || field === 'adminNewEmail' || field === 'adminLoginEmail') {
+                error = validateEmail(value);
+            } else if (field === 'password' || field === 'newPassword' || field === 'adminPassword' || field === 'adminNewPassword' || field === 'adminLoginPassword') {
+                error = validatePassword(value);
+            }
+
+            if (value === '') {
+                tooltip.className = 'tooltip';
+                tooltip.textContent = getTooltipMessage(field);
+            } else if (error) {
+                tooltip.className = 'tooltip invalid';
+                tooltip.textContent = error;
+            } else {
+                tooltip.className = 'tooltip valid';
+                tooltip.textContent = 'Valid';
+            }
+        }
+
+        function updateFileAccept() {
+            const fileType = document.getElementById('fileType').value;
+            const mediaUpload = document.getElementById('mediaUpload');
+            if (fileType === 'image') {
+                mediaUpload.accept = 'image/*';
+            } else if (fileType === 'audio') {
+                mediaUpload.accept = 'audio/*';
+            } else if (fileType === 'video') {
+                mediaUpload.accept = 'video/*';
+            }
+            mediaUpload.value = '';
+        }
+
+        function updateSettingsFileAccept() {
+            const fileType = document.getElementById('settingsFileType').value;
+            const mediaUpload = document.getElementById('settingsMediaUpload');
+            if (fileType === 'image') {
+                mediaUpload.accept = 'image/*';
+            } else if (fileType === 'audio') {
+                mediaUpload.accept = 'audio/*';
+            } else if (fileType === 'video') {
+                mediaUpload.accept = 'video/*';
+            }
+            mediaUpload.value = '';
+        }
+
+        function validateFileType(file, expectedType) {
+            if (expectedType === 'image' && !file.type.startsWith('image/')) {
+                return 'Selected file is not an image.';
+            } else if (expectedType === 'audio' && !file.type.startsWith('audio/')) {
+                return 'Selected file is not an audio file.';
+            } else if (expectedType === 'video' && !file.type.startsWith('video/')) {
+                return 'Selected file is not a video.';
+            }
+            return '';
+        }
+
+        function showMessage(message, type, target) {
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${type}`;
+            msgDiv.textContent = message;
+            target.parentNode.insertBefore(msgDiv, target.nextSibling);
+            setTimeout(() => msgDiv.remove(), 3000);
+        }
+
+        function setActive(link) {
+            document.querySelectorAll('.nav-link').forEach(nav => nav.classList.remove('active'));
+            link.classList.add('active');
+        }
+
+        function toggleNavbarToLogin() {
+            document.getElementById('authDropdownItem').style.display = 'none';
+            document.getElementById('userLoginItem').style.display = 'block';
+        }
+
+        function showMain() {
+            document.getElementById('mainSection').classList.remove('hidden');
+            document.getElementById('clickableNames').classList.remove('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            if (currentUser) {
+                document.getElementById('uploadSection').classList.remove('hidden');
+            } else {
+                document.getElementById('uploadSection').classList.add('hidden');
+            }
+            if (!tablesVisible) {
+                document.getElementById('userTable').classList.add('hidden');
+            }
+            resetForms();
+        }
+
+        function showAuth() {
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.remove('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            resetForms();
+        }
+
+        function showAdminLogin() {
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.remove('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            resetForms();
+        }
+
+        function showSettings() {
+            if (!currentUser) {
+                showMessage('Please login to access settings.', 'error', document.querySelector('#settingsDropdown'));
+                showAuth();
+                return;
+            }
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.remove('hidden');
+            document.getElementById('adminSection').classList.add('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editFname').value = currentUser.fname;
+            document.getElementById('editGname').value = currentUser.gname;
+            document.getElementById('editDepartment').value = currentUser.department;
+            document.getElementById('editPhone').value = currentUser.phone;
+            mediaFiles = currentUser.profiles || [];
+            displayMedia(currentIndex);
+            displaySettingsMedia(currentIndex);
+            resetForms();
+        }
+
+        function showAdminSignup() {
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            ['adminSignup', 'adminChangeEmail', 'adminChangePassword', 'adminDeleteAccount', 'adminShowTables', 'adminRemoveRow', 'adminRemoveTable'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('adminSignup').classList.remove('hidden');
+            resetForms();
+        }
+
+        function showAdminChangeEmail() {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to change email.', 'error', document.querySelector('#adminDropdown'));
+                showAdminLogin();
+                return;
+            }
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            ['adminSignup', 'adminChangeEmail', 'adminChangePassword', 'adminDeleteAccount', 'adminShowTables', 'adminRemoveRow', 'adminRemoveTable'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('adminChangeEmail').classList.remove('hidden');
+            resetForms();
+        }
+
+        function showAdminChangePassword() {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to change password.', 'error', document.querySelector('#adminDropdown'));
+                showAdminLogin();
+                return;
+            }
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            ['adminSignup', 'adminChangeEmail', 'adminChangePassword', 'adminDeleteAccount', 'adminShowTables', 'adminRemoveRow', 'adminRemoveTable'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('adminChangePassword').classList.remove('hidden');
+            resetForms();
+        }
+
+        function showAdminDeleteAccount() {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to delete account.', 'error', document.querySelector('#adminDropdown'));
+                showAdminLogin();
+                return;
+            }
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            ['adminSignup', 'adminChangeEmail', 'adminChangePassword', 'adminDeleteAccount', 'adminShowTables', 'adminRemoveRow', 'adminRemoveTable'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('adminDeleteAccount').classList.remove('hidden');
+            resetForms();
+        }
+
+        function showAllTables() {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to view tables.', 'error', document.querySelector('#adminDropdown'));
+                showAdminLogin();
+                return;
+            }
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            ['adminSignup', 'adminChangeEmail', 'adminChangePassword', 'adminDeleteAccount', 'adminShowTables', 'adminRemoveRow', 'adminRemoveTable'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('adminShowTables').classList.remove('hidden');
+            tablesVisible = true;
+            updateAdminTables();
+            resetForms();
+        }
+
+        function showRemoveRow() {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to remove rows.', 'error', document.querySelector('#adminDropdown'));
+                showAdminLogin();
+                return;
+            }
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            ['adminSignup', 'adminChangeEmail', 'adminChangePassword', 'adminDeleteAccount', 'adminShowTables', 'adminRemoveRow', 'adminRemoveTable'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('adminRemoveRow').classList.remove('hidden');
+            resetForms();
+        }
+
+        function showRemoveTable() {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to remove tables.', 'error', document.querySelector('#adminDropdown'));
+                showAdminLogin();
+                return;
+            }
+            document.getElementById('mainSection').classList.add('hidden');
+            document.getElementById('clickableNames').classList.add('hidden');
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('adminLoginSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            document.getElementById('adminSection').classList.remove('hidden');
+            document.getElementById('profileViewer').classList.add('hidden');
+            ['adminSignup', 'adminChangeEmail', 'adminChangePassword', 'adminDeleteAccount', 'adminShowTables', 'adminRemoveRow', 'adminRemoveTable'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById('adminRemoveTable').classList.remove('hidden');
+            resetForms();
+        }
+
+        function signup(event) {
+            const name = document.getElementById('name').value.trim();
+            const fname = document.getElementById('fname').value.trim();
+            const gname = document.getElementById('gname').value.trim();
+            const department = document.getElementById('department').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (validateInput(name, 'Name')) {
+                showMessage(validateInput(name, 'Name'), 'error', event.target);
+                return;
+            }
+            if (validateInput(fname, 'Father Name')) {
+                showMessage(validateInput(fname, 'Father Name'), 'error', event.target);
+                return;
+            }
+            if (validateInput(gname, 'Grandfather Name')) {
+                showMessage(validateInput(gname, 'Grandfather Name'), 'error', event.target);
+                return;
+            }
+            if (validateInput(department, 'Department')) {
+                showMessage(validateInput(department, 'Department'), 'error', event.target);
+                return;
+            }
+            if (validatePhone(phone)) {
+                showMessage(validatePhone(phone), 'error', event.target);
+                return;
+            }
+            if (validateEmail(email)) {
+                showMessage(validateEmail(email), 'error', event.target);
+                return;
+            }
+            if (validatePassword(password)) {
+                showMessage(validatePassword(password), 'error', event.target);
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            if (users.some(u => u.email === email)) {
+                showMessage('Email already registered.', 'error', event.target);
+                return;
+            }
+
+            const rollNumber = users.length > 0 ? Math.max(...users.map(u => u.rollNumber || 0)) + 1 : 1;
+            const user = { rollNumber, name, fname, gname, department, phone, email, password, profiles: [] };
+            users.push(user);
+            localStorage.setItem('users', JSON.stringify(users));
+            showMessage('Signup successful!', 'success', event.target);
+            updateNameList();
+            resetForms();
+        }
+
+        function login(event) {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+
+            const foundUser = users.find(u => u.email === email && u.password === password);
+
+            if (foundUser) {
+                currentUser = foundUser;
+                currentAdmin = null;
+                mediaFiles = foundUser.profiles || [];
+                showMessage('User login successful!', 'success', event.target);
+                document.getElementById('uploadSection').classList.remove('hidden');
+                displayMedia(currentIndex);
+                displaySettingsMedia(currentIndex);
+                showMain();
+            } else {
+                showMessage('Invalid credentials.', 'error', event.target);
+            }
+        }
+
+        function adminLogin(event) {
+            const email = document.getElementById('adminLoginEmail').value;
+            const password = document.getElementById('adminLoginPassword').value;
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+
+            const foundAdmin = admins.find(a => a.email === email && a.password === password);
+
+            if (foundAdmin) {
+                currentAdmin = foundAdmin;
+                currentUser = null;
+                mediaFiles = [];
+                showMessage('Admin login successful!', 'success', event.target);
+                document.getElementById('uploadSection').classList.add('hidden');
+                showMain();
+            } else {
+                showMessage('Invalid admin credentials.', 'error', event.target);
+            }
+        }
+
+        function adminSignup(event) {
+            const email = document.getElementById('adminEmail').value.trim();
+            const password = document.getElementById('adminPassword').value;
+
+            if (validateEmail(email)) {
+                showMessage(validateEmail(email), 'error', event.target);
+                return;
+            }
+            if (validatePassword(password)) {
+                showMessage(validatePassword(password), 'error', event.target);
+                return;
+            }
+
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            if (admins.some(a => a.email === email)) {
+                showMessage('Admin email already registered.', 'error', event.target);
+                return;
+            }
+
+            const adminId = admins.length > 0 ? Math.max(...admins.map(a => a.adminId || 0)) + 1 : 1;
+            const admin = { adminId, email, password };
+            admins.push(admin);
+            localStorage.setItem('admins', JSON.stringify(admins));
+            showMessage('Admin signup successful!', 'success', event.target);
+            resetForms();
+            showAdminLogin();
+        }
+
+        function adminChangeEmail(event) {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to change email.', 'error', event.target);
+                showAdminLogin();
+                return;
+            }
+            const newEmail = document.getElementById('adminNewEmail').value.trim();
+            const currentPassword = document.getElementById('adminEmailCurrentPassword').value;
+
+            if (currentPassword !== currentAdmin.password) {
+                showMessage('Incorrect current admin password.', 'error', event.target);
+                return;
+            }
+            if (validateEmail(newEmail)) {
+                showMessage(validateEmail(newEmail), 'error', event.target);
+                return;
+            }
+
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            if (admins.some(a => a.email === newEmail && a.email !== currentAdmin.email)) {
+                showMessage('Email already registered.', 'error', event.target);
+                return;
+            }
+
+            const index = admins.findIndex(a => a.email === currentAdmin.email);
+            if (index === -1) {
+                showMessage('Admin not found.', 'error', event.target);
+                return;
+            }
+
+            admins[index].email = newEmail;
+            localStorage.setItem('admins', JSON.stringify(admins));
+            currentAdmin = admins[index];
+            showMessage('Admin email updated successfully!', 'success', event.target);
+            resetForms();
+        }
+
+        function adminChangePassword(event) {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to change password.', 'error', event.target);
+                showAdminLogin();
+                return;
+            }
+            const newPassword = document.getElementById('adminNewPassword').value;
+            const currentPassword = document.getElementById('adminPasswordCurrentPassword').value;
+
+            if (currentPassword !== currentAdmin.password) {
+                showMessage('Incorrect current admin password.', 'error', event.target);
+                return;
+            }
+            if (validatePassword(newPassword)) {
+                showMessage(validatePassword(newPassword), 'error', event.target);
+                return;
+            }
+
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const index = admins.findIndex(a => a.email === currentAdmin.email);
+            if (index === -1) {
+                showMessage('Admin not found.', 'error', event.target);
+                return;
+            }
+
+            admins[index].password = newPassword;
+            localStorage.setItem('admins', JSON.stringify(admins));
+            currentAdmin = admins[index];
+            showMessage('Admin password updated successfully!', 'success', event.target);
+            resetForms();
+        }
+
+        function adminDeleteAccount(event) {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to delete account.', 'error', event.target);
+                showAdminLogin();
+                return;
+            }
+            const currentPassword = document.getElementById('adminDeleteCurrentPassword').value;
+            if (currentPassword !== currentAdmin.password) {
+                showMessage('Incorrect current admin password.', 'error', event.target);
+                return;
+            }
+
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const index = admins.findIndex(a => a.email === currentAdmin.email);
+            if (index === -1) {
+                showMessage('Admin not found.', 'error', event.target);
+                return;
+            }
+
+            admins.splice(index, 1);
+            localStorage.setItem('admins', JSON.stringify(admins));
+            currentAdmin = null;
+            showMessage('Admin account deleted successfully!', 'success', event.target);
+            resetForms();
+            showMain();
+        }
+
+        function updateAdminTables() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+            const userTable = document.getElementById('adminUserTable');
+            const adminsTable = document.getElementById('adminAdminsTable');
+
+            userTable.innerHTML = `<tr><th>Number</th><th>Full Name</th><th>Email</th><th>Department</th><th>Phone</th><th>Password</th></tr>`;
+            adminsTable.innerHTML = `<tr><th>Admin ID</th><th>Email</th><th>Password</th></tr>`;
+
+            users.forEach(u => {
+                const row = userTable.insertRow();
+                row.insertCell(0).innerText = u.rollNumber || 'N/A';
+                row.insertCell(1).innerText = `${u.name} ${u.fname} ${u.gname}`;
+                row.insertCell(2).innerText = u.email;
+                row.insertCell(3).innerText = u.department;
+                row.insertCell(4).innerText = u.phone;
+                row.insertCell(5).innerText = u.password;
+            });
+
+            admins.forEach(a => {
+                const row = adminsTable.insertRow();
+                row.insertCell(0).innerText = a.adminId || 'N/A';
+                row.insertCell(1).innerText = a.email;
+                row.insertCell(2).innerText = a.password;
+            });
+
+            userTable.classList.remove('hidden');
+            adminsTable.classList.remove('hidden');
+        }
+
+        function removeRow(event) {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to remove rows.', 'error', event.target);
+                showAdminLogin();
+                return;
+            }
+            const tableType = document.getElementById('removeTableType').value;
+            const rowId = document.getElementById('removeRowId').value.trim();
+            const password = document.getElementById('removeRowPassword').value;
+
+            if (password !== currentAdmin.password) {
+                showMessage('Incorrect admin password.', 'error', event.target);
+                return;
+            }
+
+            if (!rowId || isNaN(rowId)) {
+                showMessage('Please enter a valid ID.', 'error', event.target);
+                return;
+            }
+
+            if (tableType === 'users') {
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const index = users.findIndex(u => u.rollNumber === parseInt(rowId));
+                if (index === -1) {
+                    showMessage('User not found.', 'error', event.target);
+                    return;
+                }
+                users.splice(index, 1);
+                localStorage.setItem('users', JSON.stringify(users));
+                showMessage('User row removed successfully!', 'success', event.target);
+                updateNameList();
+            } else if (tableType === 'admins') {
+                const admins = JSON.parse(localStorage.getItem('admins') || '[]');
+                const index = admins.findIndex(a => a.adminId === parseInt(rowId));
+                if (index === -1) {
+                    showMessage('Admin not found.', 'error', event.target);
+                    return;
+                }
+                admins.splice(index, 1);
+                localStorage.setItem('admins', JSON.stringify(admins));
+                if (currentAdmin && currentAdmin.adminId === parseInt(rowId)) {
+                    currentAdmin = null;
+                }
+                showMessage('Admin row removed successfully!', 'success', event.target);
+            }
+            resetForms();
+        }
+
+        function removeTable(event) {
+            if (!currentAdmin) {
+                showMessage('Please login as admin to remove tables.', 'error', event.target);
+                showAdminLogin();
+                return;
+            }
+            const tableName = document.getElementById('removeTableName').value;
+            const password = document.getElementById('removeTablePassword').value;
+
+            if (password !== currentAdmin.password) {
+                showMessage('Incorrect admin password.', 'error', event.target);
+                return;
+            }
+
+            if (tableName === 'users') {
+                localStorage.removeItem('users');
+                showMessage('Users table removed successfully!', 'success', event.target);
+                updateNameList();
+            } else if (tableName === 'admins') {
+                localStorage.removeItem('admins');
+                currentAdmin = null;
+                showMessage('Admins table removed successfully!', 'success', event.target);
+            }
+            resetForms();
+        }
+
+        function editProfile(event) {
+            if (!currentUser) {
+                showMessage('Please login to edit profile.', 'error', event.target);
+                return;
+            }
+            const name = document.getElementById('editName').value.trim();
+            const fname = document.getElementById('editFname').value.trim();
+            const gname = document.getElementById('editGname').value.trim();
+            const department = document.getElementById('editDepartment').value.trim();
+            const phone = document.getElementById('editPhone').value.trim();
+
+            if (validateInput(name, 'Name')) {
+                showMessage(validateInput(name, 'Name'), 'error', event.target);
+                return;
+            }
+            if (validateInput(fname, 'Father Name')) {
+                showMessage(validateInput(fname, 'Father Name'), 'error', event.target);
+                return;
+            }
+            if (validateInput(gname, 'Grandfather Name')) {
+                showMessage(validateInput(gname, 'Grandfather Name'), 'error', event.target);
+                return;
+            }
+            if (validateInput(department, 'Department')) {
+                showMessage(validateInput(department, 'Department'), 'error', event.target);
+                return;
+            }
+            if (validatePhone(phone)) {
+                showMessage(validatePhone(phone), 'error', event.target);
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const index = users.findIndex(u => u.email === currentUser.email);
+            if (index === -1) {
+                showMessage('User not found.', 'error', event.target);
+                return;
+            }
+
+            users[index] = { ...users[index], name, fname, gname, department, phone };
+            localStorage.setItem('users', JSON.stringify(users));
+            currentUser = users[index];
+            showMessage('Profile updated successfully!', 'success', event.target);
+            updateNameList();
+            resetForms();
+        }
+
+        function changeEmail(event) {
+            if (!currentUser) {
+                showMessage('Please login to change email.', 'error', event.target);
+                return;
+            }
+            const newEmail = document.getElementById('newEmail').value.trim();
+            const currentPassword = document.getElementById('emailCurrentPassword').value;
+
+            if (currentPassword !== currentUser.password) {
+                showMessage('Incorrect current password.', 'error', event.target);
+                return;
+            }
+            if (validateEmail(newEmail)) {
+                showMessage(validateEmail(newEmail), 'error', event.target);
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            if (users.some(u => u.email === newEmail && u.email !== currentUser.email)) {
+                showMessage('Email already registered.', 'error', event.target);
+                return;
+            }
+
+            const index = users.findIndex(u => u.email === currentUser.email);
+            if (index === -1) {
+                showMessage('User not found.', 'error', event.target);
+                return;
+            }
+
+            users[index].email = newEmail;
+            localStorage.setItem('users', JSON.stringify(users));
+            currentUser = users[index];
+            showMessage('Email updated successfully!', 'success', event.target);
+            resetForms();
+        }
+
+        function changePassword(event) {
+            if (!currentUser) {
+                showMessage('Please login to change password.', 'error', event.target);
+                return;
+            }
+            const newPassword = document.getElementById('newPassword').value;
+            const currentPassword = document.getElementById('passwordCurrentPassword').value;
+
+            if (currentPassword !== currentUser.password) {
+                showMessage('Incorrect current password.', 'error', event.target);
+                return;
+            }
+            if (validatePassword(newPassword)) {
+                showMessage(validatePassword(newPassword), 'error', event.target);
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const index = users.findIndex(u => u.email === currentUser.email);
+            if (index === -1) {
+                showMessage('User not found.', 'error', event.target);
+                return;
+            }
+
+            users[index].password = newPassword;
+            localStorage.setItem('users', JSON.stringify(users));
+            currentUser = users[index];
+            showMessage('Password updated successfully!', 'success', event.target);
+            resetForms();
+        }
+
+        function updatePhone(event) {
+            if (!currentUser) {
+                showMessage('Please login to update phone number.', 'error', event.target);
+                return;
+            }
+            const newPhone = document.getElementById('newPhone').value.trim();
+            const currentPassword = document.getElementById('phoneCurrentPassword').value;
+
+            if (currentPassword !== currentUser.password) {
+                showMessage('Incorrect current password.', 'error', event.target);
+                return;
+            }
+            if (validatePhone(newPhone)) {
+                showMessage(validatePhone(newPhone), 'error', event.target);
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const index = users.findIndex(u => u.email === currentUser.email);
+            if (index === -1) {
+                showMessage('User not found.', 'error', event.target);
+                return;
+            }
+
+            users[index].phone = newPhone;
+            localStorage.setItem('users', JSON.stringify(users));
+            currentUser = users[index];
+            showMessage('Phone number updated successfully!', 'success', event.target);
+            updateNameList();
+            resetForms();
+        }
+
+        function deleteAccount(event) {
+            if (!currentUser) {
+                showMessage('Please login to delete account.', 'error', event.target);
+                return;
+            }
+            const currentPassword = document.getElementById('deleteCurrentPassword').value;
+            if (currentPassword !== currentUser.password) {
+                showMessage('Incorrect current password.', 'error', event.target);
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const index = users.findIndex(u => u.email === currentUser.email);
+            if (index === -1) {
+                showMessage('User not found.', 'error', event.target);
+                return;
+            }
+
+            users.splice(index, 1);
+            localStorage.setItem('users', JSON.stringify(users));
+            currentUser = null;
+            showMessage('Account deleted successfully!', 'success', event.target);
+            updateNameList();
+            resetForms();
+            showMain();
+        }
+
+        function updateNameList() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const nameList = document.getElementById('nameList');
+            nameList.innerHTML = '';
+            users.forEach(user => {
+                const div = document.createElement('div');
+                div.className = 'name-item';
+                div.innerHTML = `<span class="roll-number">${user.rollNumber}</span> ${user.name} ${user.fname} ${user.gname}`;
+                div.onclick = () => viewProfile(user.rollNumber);
+                nameList.appendChild(div);
+            });
+        }
+
+        function uploadMedia(event) {
+            if (!currentUser) {
+                showMessage('Please login to upload media.', 'error', event.target);
+                return;
+            }
+            const file = mediaUpload.files[0];
+            const fileType = document.getElementById('fileType').value;
+            if (!file) {
+                showMessage('No file selected.', 'error', event.target);
+                return;
+            }
+
+            const fileError = validateFileType(file, fileType);
+            if (fileError) {
+                showMessage(fileError, 'error', event.target);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const media = { type: fileType, data: e.target.result };
+                mediaFiles.push(media);
+                currentIndex = mediaFiles.length - 1;
+                displayMedia(currentIndex);
+                displaySettingsMedia(currentIndex);
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const index = users.findIndex(u => u.email === currentUser.email);
+                if (index !== -1) {
+                    users[index].profiles = mediaFiles;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    currentUser.profiles = mediaFiles;
+                }
+                showMessage('Media uploaded successfully!', 'success', event.target);
+                mediaUpload.value = '';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function uploadSettingsMedia(event) {
+            if (!currentUser) {
+                showMessage('Please login to upload media.', 'error', event.target);
+                return;
+            }
+            const file = settingsMediaUpload.files[0];
+            const fileType = document.getElementById('settingsFileType').value;
+            if (!file) {
+                showMessage('No file selected.', 'error', event.target);
+                return;
+            }
+
+            const fileError = validateFileType(file, fileType);
+            if (fileError) {
+                showMessage(fileError, 'error', event.target);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const media = { type: fileType, data: e.target.result };
+                mediaFiles.push(media);
+                currentIndex = mediaFiles.length - 1;
+                displayMedia(currentIndex);
+                displaySettingsMedia(currentIndex);
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                const index = users.findIndex(u => u.email === currentUser.email);
+                if (index !== -1) {
+                    users[index].profiles = mediaFiles;
+                    localStorage.setItem('users', JSON.stringify(users));
+                    currentUser.profiles = mediaFiles;
+                }
+                showMessage('Media uploaded successfully!', 'success', event.target);
+                settingsMediaUpload.value = '';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function displayMedia(index) {
+            if (mediaFiles.length === 0) {
+                mediaDisplay.innerHTML = '<p>No media uploaded.</p>';
+                return;
+            }
+            const media = mediaFiles[index];
+            mediaDisplay.innerHTML = '';
+            if (media.type === 'image') {
+                const img = document.createElement('img');
+                img.src = media.data;
+                img.onclick = () => showEnlargedView(media.data);
+                mediaDisplay.appendChild(img);
+            } else if (media.type === 'audio') {
+                const audio = document.createElement('audio');
+                audio.src = media.data;
+                audio.controls = true;
+                mediaDisplay.appendChild(audio);
+            } else if (media.type === 'video') {
+                const video = document.createElement('video');
+                video.src = media.data;
+                video.controls = true;
+                mediaDisplay.appendChild(video);
+            }
+        }
+
+        function displaySettingsMedia(index) {
+            if (mediaFiles.length === 0) {
+                settingsMediaDisplay.innerHTML = '<p>No media uploaded.</p>';
+                return;
+            }
+            const media = mediaFiles[index];
+            settingsMediaDisplay.innerHTML = '';
+            if (media.type === 'image') {
+                const img = document.createElement('img');
+                img.src = media.data;
+                img.onclick = () => showEnlargedView(media.data);
+                settingsMediaDisplay.appendChild(img);
+            } else if (media.type === 'audio') {
+                const audio = document.createElement('audio');
+                audio.src = media.data;
+                audio.controls = true;
+                settingsMediaDisplay.appendChild(audio);
+            } else if (media.type === 'video') {
+                const video = document.createElement('video');
+                video.src = media.data;
+                video.controls = true;
+                settingsMediaDisplay.appendChild(video);
+            }
+        }
+
+        function prevMedia() {
+            if (mediaFiles.length === 0) return;
+            currentIndex = (currentIndex - 1 + mediaFiles.length) % mediaFiles.length;
+            displayMedia(currentIndex);
+        }
+
+        function nextMedia() {
+            if (mediaFiles.length === 0) return;
+            currentIndex = (currentIndex + 1) % mediaFiles.length;
+            displayMedia(currentIndex);
+        }
+
+        function showEnlargedView(src) {
+            const viewer = document.createElement('div');
+            viewer.className = 'enlarged-viewer';
+            viewer.innerHTML = `
+                <button class="enlarged-close-btn" onclick="this.parentNode.remove()">X</button>
+                <img src="${src}">
+            `;
+            document.body.appendChild(viewer);
+        }
+
+        function viewProfile(rollNumber) {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.rollNumber === rollNumber);
+            if (!user) return;
+
+            document.getElementById('profileViewer').classList.remove('hidden');
+            document.getElementById('profileFullName').textContent = `${user.name} ${user.fname} ${user.gname}`;
+            document.getElementById('profileDepartment').textContent = `Department: ${user.department}`;
+            viewedMedia = user.profiles || [];
+            viewedIndex = 0;
+            displayProfileMedia(viewedIndex);
+        }
+
+        function displayProfileMedia(index) {
+            if (viewedMedia.length === 0) {
+                profileMediaDisplay.innerHTML = '<p>No media available.</p>';
+                return;
+            }
+            const media = viewedMedia[index];
+            profileMediaDisplay.innerHTML = '';
+            if (media.type === 'image') {
+                const img = document.createElement('img');
+                img.src = media.data;
+                img.onclick = () => showEnlargedView(media.data);
+                profileMediaDisplay.appendChild(img);
+            } else if (media.type === 'audio') {
+                const audio = document.createElement('audio');
+                audio.src = media.data;
+                audio.controls = true;
+                profileMediaDisplay.appendChild(audio);
+            } else if (media.type === 'video') {
+                const video = document.createElement('video');
+                video.src = media.data;
+                video.controls = true;
+                profileMediaDisplay.appendChild(video);
+            }
+        }
+
+        function prevProfileMedia() {
+            if (viewedMedia.length === 0) return;
+            viewedIndex = (viewedIndex - 1 + viewedMedia.length) % viewedMedia.length;
+            displayProfileMedia(viewedIndex);
+        }
+
+        function nextProfileMedia() {
+            if (viewedMedia.length === 0) return;
+            viewedIndex = (viewedIndex + 1) % viewedMedia.length;
+            displayProfileMedia(viewedIndex);
+        }
+
+        function closeProfileViewer() {
+            document.getElementById('profileViewer').classList.add('hidden');
+        }
+
+        function showAboutUs() {
+            alert('About Us: This is a user profile portal where users can sign up, login, upload media, and manage their profiles. Admins can manage users and other admins through the admin panel.');
+        }
+
+        window.onload = function () {
+            initializeUsers();
+            initializeAdmins();
+            updateNameList();
+            showMain();
+        };
+    </script>
+</body>
+</html>
